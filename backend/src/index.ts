@@ -1,11 +1,14 @@
 import express from "express";
+import { signupSchema } from "";
+
+
 
 
 const app = express();
 
 app.use(express.json());
 
-app.post("/api/v1/signup", (req, res) => {
+app.post("/api/v1/signup", signupSchema, (req, res) => {
   const {username, email, password} = req.body;
 });
 
