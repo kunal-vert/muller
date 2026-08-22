@@ -1,0 +1,9 @@
+# Dependencies
+node_modules/
+jspm_packages/
+
+# TypeScript Build & Output directories
+dist/
+build/
+.esbuild/
+.env
