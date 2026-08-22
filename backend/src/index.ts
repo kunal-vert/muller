@@ -9,6 +9,7 @@ import express from "express";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt"
 import { UserModel } from "./db.js";
+import { ValidateReq } from "./ValidateReq.js";
 
 const MONGO_URL = process.env.MONGO_URL as string;
 
@@ -20,7 +21,7 @@ const app = express();
 
 app.use(express.json());
 
-app.post("/api/v1/signup", async (req, res) => {
+app.post("/api/v1/signup", ValidateReq, async (req, res) => {
   const { username, email, password } = req.body;
 
 
@@ -49,16 +50,11 @@ app.post("/api/v1/signup", async (req, res) => {
     })
   }
 
-
-
-
-
-
 });
 
 
 app.post("/api/v1/signin", (req, res) => {
-
+     
 });
 
 

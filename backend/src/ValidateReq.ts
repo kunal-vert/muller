@@ -1,7 +1,7 @@
 import { z } from "zod"
 import type { Request, Response, NextFunction } from "express";
 
- export const signupSchema = (req: Request, res: Response, next: NextFunction) => {
+ export const ValidateReq = (req: Request, res: Response, next: NextFunction) => {
     const BodyValidation = z.object({
         username: z.string({
             message: "username must be valid string"
