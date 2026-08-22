@@ -8,7 +8,7 @@ dotenv.config();
 import express from "express";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt"
-import { UserModel } from "./db.js";
+import { ContentModel, UserModel } from "./db.js";
 import { ValidateReq } from "./ValidateReq.js";
 import jwt from "jsonwebtoken";
 import { UserMiddleware } from "./middleware.js";
@@ -99,12 +99,22 @@ app.post("/api/v1/signin", async (req, res) => {
 });
 
 
-app.post("/api/v1/content", UserMiddleware , (req, res) => {
-     
+app.post("/api/v1/content", UserMiddleware, async (req, res) => {
+  const { title, link } = req.body;
+
+  await ContentModel.create({
+    title: title,
+    link: link,
+    userId: (req as any).userId,
+    tags: []
+  })
+  return res.json({
+    message: "Content has been created"
+  })
 });
 
 
-app.get("/api/v1/content", (req, res) => {
+app.get("/api/v1/content", UserMiddleware, (req, res) => {
 
 });
 
