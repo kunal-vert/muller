@@ -10,8 +10,11 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt"
 import { UserModel } from "./db.js";
 import { ValidateReq } from "./ValidateReq.js";
+import jwt from "jsonwebtoken";
+
 
 const MONGO_URL = process.env.MONGO_URL as string;
+const JWT_secret = process.env.JWT_SECRET as string;
 
 mongoose.connect(MONGO_URL)
 
@@ -53,8 +56,45 @@ app.post("/api/v1/signup", ValidateReq, async (req, res) => {
 });
 
 
-app.post("/api/v1/signin", (req, res) => {
-     
+app.post("/api/v1/signin", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await UserModel.findOne({
+      username: username
+    })
+
+    if (!user) {
+      return res.status(403).json({
+        message: "creds don't match"
+      })
+
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(403).json({
+        message: "Incorrect credentials"
+      })
+    }
+
+    const token = jwt.sign({
+      id: user._id
+    }, JWT_secret)
+
+    return res.status(200).json({
+      token,
+      message: "Signed in successfully!"
+    });
+
+  } catch (err: any) {
+    return res.status(500).json({
+      message: "Server error during signin",
+      error: err.message
+    })
+  }
+
+
 });
 
 
