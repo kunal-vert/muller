@@ -10,7 +10,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt"
 import { UserModel } from "./db.js";
 
-const MONGO_URL  = process.env.MONGO_URL as string;
+const MONGO_URL = process.env.MONGO_URL as string;
 
 mongoose.connect(MONGO_URL)
 
@@ -21,46 +21,65 @@ const app = express();
 app.use(express.json());
 
 app.post("/api/v1/signup", async (req, res) => {
-  const {username, email, password} = req.body;
+  const { username, email, password } = req.body;
 
-  const HashPassword = await bcrypt.hash(password, 6);
 
-  await  UserModel.create({
-    username: username,
-    email: email,
-    password: HashPassword,
-  })
 
-  res.json({
-    message: "Profile has been created"
-  })
+  try {
+    const HashPassword = await bcrypt.hash(password, 6);
+    await UserModel.create({
+      username: username,
+      email: email,
+      password: HashPassword,
+    })
+    return res.status(201).json({
+      message: "user has been sign up"
+    })
+  } catch (error: any) {
+    if (error.code === 11000) {
+
+      return res.status(400).json({
+        message: 'User already exists with this email or username'
+      })
+    }
+
+    return res.status(500).json({
+      message: "Error signing up",
+      error: error.message
+    })
+  }
+
+
+
+
+
 
 });
- 
+
 
 app.post("/api/v1/signin", (req, res) => {
-  
+
 });
 
 
 app.post("/api/v1/content", (req, res) => {
-  
+
 });
 
 
 app.get("/api/v1/content", (req, res) => {
-  
+
 });
 
 
 app.delete("/api/v1/content", (req, res) => {
-  
+
 });
 
 
 
 app.get("/api/v1/brain/ :shareLink", (req, res) => {
-  
+
 });
 
 
