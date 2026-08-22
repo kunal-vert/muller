@@ -11,10 +11,11 @@ import bcrypt from "bcrypt"
 import { UserModel } from "./db.js";
 import { ValidateReq } from "./ValidateReq.js";
 import jwt from "jsonwebtoken";
+import { UserMiddleware } from "./middleware.js";
+import { MONGO_URL, JWT_PASSWORD } from "./config.js";
 
 
-const MONGO_URL = process.env.MONGO_URL as string;
-const JWT_secret = process.env.JWT_SECRET as string;
+
 
 mongoose.connect(MONGO_URL)
 
@@ -80,7 +81,7 @@ app.post("/api/v1/signin", async (req, res) => {
 
     const token = jwt.sign({
       id: user._id
-    }, JWT_secret)
+    }, JWT_PASSWORD)
 
     return res.status(200).json({
       token,
@@ -98,8 +99,8 @@ app.post("/api/v1/signin", async (req, res) => {
 });
 
 
-app.post("/api/v1/content", (req, res) => {
-
+app.post("/api/v1/content", UserMiddleware , (req, res) => {
+     
 });
 
 
