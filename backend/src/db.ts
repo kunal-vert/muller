@@ -9,8 +9,8 @@ const UserSchema = new Schema({
 export const UserModel = model("User", UserSchema);
 
 const ContentSchema = new Schema({
-    Title: String,
-    Link:  String,
+    title: String,
+    link:  String,
     tags: [{type: mongoose.Types.ObjectId, ref: "Tag"}], // it will be in object form in bunch
     userId :{type: mongoose.Types.ObjectId, ref: "User", require: true}
 })
