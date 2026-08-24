@@ -58,12 +58,13 @@ app.post("/api/v1/signup", ValidateReq, async (req, res) => {
 
 
 app.post("/api/v1/signin", async (req, res) => {
-  const { username, password } = req.body;
+  const { identifier, password } = req.body;
+ 
 
   try {
-    const user = await UserModel.findOne({
-      username: username
-    })
+     const IsEmail = identifier.includes("@");
+     const dbQuery = IsEmail ? {email: identifier} : {username: identifier};
+    const user = await UserModel.findOne(dbQuery)
 
     if (!user) {
       return res.status(403).json({
@@ -130,7 +131,7 @@ app.delete("/api/v1/content", UserMiddleware, async(req, res) => {
      const contentId = req.body.contentId;
 
      await ContentModel.deleteMany({
-      contenId: contentId,
+      contentId: contentId,
       userId : (req as any).userId
      })
 
