@@ -8,11 +8,12 @@ dotenv.config();
 import express from "express";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt"
-import { ContentModel, UserModel } from "./db.js";
+import { ContentModel, LinkModel, UserModel } from "./db.js";
 import { ValidateReq } from "./ValidateReq.js";
 import jwt from "jsonwebtoken";
 import { UserMiddleware } from "./middleware.js";
 import { MONGO_URL, JWT_PASSWORD } from "./config.js";
+import { random } from "./utils.js";
 
 
 
@@ -59,11 +60,11 @@ app.post("/api/v1/signup", ValidateReq, async (req, res) => {
 
 app.post("/api/v1/signin", async (req, res) => {
   const { identifier, password } = req.body;
- 
+
 
   try {
-     const IsEmail = identifier.includes("@");
-     const dbQuery = IsEmail ? {email: identifier} : {username: identifier};
+    const IsEmail = identifier.includes("@");
+    const dbQuery = IsEmail ? { email: identifier } : { username: identifier };
     const user = await UserModel.findOne(dbQuery)
 
     if (!user) {
@@ -127,23 +128,41 @@ app.get("/api/v1/content", UserMiddleware, async (req, res) => {
 });
 
 
-app.delete("/api/v1/content", UserMiddleware, async(req, res) => {
-     const contentId = req.body.contentId;
+app.delete("/api/v1/content", UserMiddleware, async (req, res) => {
+  const contentId = req.body.contentId;
 
-     await ContentModel.deleteMany({
-      _id: contentId,
-      userId : (req as any).userId
-     })
+  await ContentModel.deleteMany({
+    _id: contentId,
+    userId: (req as any).userId
+  })
 
-     res.json({
-      message: "Content has been deleted"
-     })
+  res.json({
+    message: "Content has been deleted"
+  })
 });
 
 
 
-app.get("/api/v1/brain/ :shareLink", (req, res) => {
+app.post("/api/v1/brain/share", UserMiddleware, async (req, res) => {
+  const share = req.body.share;
+  if (share) {
+    await LinkModel.create({
+      userId: (req as any).userId,
+      Hash: random(10)
+    })
+  }
+  else {
+    await LinkModel.deleteOne({
+      userId: (req as any).userId
+    })
+  }
+  res.json({
+    message: "Updated sharable link "
+  })
+});
 
+app.get("/api/v1/brain/ :shareLink", UserMiddleware,  (req, res) => {
+   
 });
 
 
