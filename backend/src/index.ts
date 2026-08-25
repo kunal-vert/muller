@@ -142,7 +142,6 @@ app.delete("/api/v1/content", UserMiddleware, async (req, res) => {
 });
 
 
-
 app.post("/api/v1/brain/share", UserMiddleware, async (req, res) => {
   const share = req.body.share;
   if (share) {
@@ -161,19 +160,43 @@ app.post("/api/v1/brain/share", UserMiddleware, async (req, res) => {
   })
 });
 
-app.get("/api/v1/brain/ :shareLink", UserMiddleware, async (req, res) => {
-   const hash = req.params.shareLink;
-  
-   const link = await LinkModel.findOne({
+
+app.get("/api/v1/brain/:shareLink", UserMiddleware, async (req, res) => {
+  const hash = req.params.shareLink as string;
+
+  const link = await LinkModel.findOne({
     hash: hash
-   })
+  })
 
-   if (!link) {
-    
-   }
+  if (!link) {
+    res.status(411).json({
+      message: "Sorry Invalid Input"
+    })
+    return
+  }
 
-   
-  
+  const Content = await ContentModel.findOne({
+    userId: (link as any).userId
+  })
+
+  const User = await UserModel.findOne({
+    userId: link.userId
+  })
+
+  if (!User) {
+    res.status(404).json({
+      message: "Invalid link"
+    }
+
+    )
+  }
+
+  res.json({
+    User: User,
+    content: Content
+  })
+
+
 });
 
 
@@ -182,3 +205,4 @@ app.get("/api/v1/brain/ :shareLink", UserMiddleware, async (req, res) => {
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
 });
+
