@@ -144,24 +144,55 @@ app.delete("/api/v1/content", UserMiddleware, async (req, res) => {
 
 app.post("/api/v1/brain/share", UserMiddleware, async (req, res) => {
   const share = req.body.share;
-  if (share) {
-    await LinkModel.create({
-      userId: (req as any).userId,
-      Hash: random(10)
-    })
+  
+
+  try {
+    if (share) {
+
+      const existingLink = await LinkModel.findOne({ 
+        userId: (req as any).userId
+       })
+
+      if (existingLink) {
+        return res.json({
+          hash: existingLink.hash,
+          message: "Existing share link retrieved"
+        })
+      }
+
+      const hash = random(10)
+      await LinkModel.create({
+        userId: (req as any).userId,
+        hash: hash
+      })
+      res.json({
+        hash: hash,
+        message: "New share link generated"
+      })
+    }
+    else {
+      await LinkModel.deleteOne({
+        userId: (req as any).userId
+      })
+      res.json({
+        message: "Remove sharable link "
+      })
+    }
+
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "Server error updating share link",
+      error: error.message
+    });
   }
-  else {
-    await LinkModel.deleteOne({
-      userId: (req as any).userId
-    })
-  }
-  res.json({
-    message: "Updated sharable link "
-  })
+
+
+
+
 });
 
 
-app.get("/api/v1/brain/:shareLink", UserMiddleware, async (req, res) => {
+app.get("/api/v1/brain/:shareLink" , async (req, res) => {
   const hash = req.params.shareLink as string;
 
   const link = await LinkModel.findOne({
@@ -175,25 +206,24 @@ app.get("/api/v1/brain/:shareLink", UserMiddleware, async (req, res) => {
     return
   }
 
-  const Content = await ContentModel.findOne({
+  const content = await ContentModel.findOne({
     userId: (link as any).userId
   })
 
   const User = await UserModel.findOne({
-    userId: link.userId
+    _id: link.userId
   })
 
   if (!User) {
     res.status(404).json({
       message: "Invalid link"
-    }
-
-    )
+    })
+    return
   }
 
   res.json({
-    User: User,
-    content: Content
+    User: User.username,
+    content: content
   })
 
 
