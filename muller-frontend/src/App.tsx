@@ -1,13 +1,14 @@
-import { Button } from "./components/UI/Button"
+import { Button } from "./components/Button"
 import { PlusIcon } from "./Icons/PlusIcon"
 
 const App = () => {
   return (
-    <>
-      <Button variant="primary" text="share" size="sm" onClick={() => { }} />
-      <Button startIcon={<PlusIcon size="lg" />} variant="secondary" text="Add content" size="md" onClick={() => { }} />
-      <Button startIcon={<PlusIcon size="md" />} variant="secondary" text="Add content" size="lg" onClick={() => { }} />
-    </>)
+    <div className="flex items-center justify-center gap-3 ">
+      <Button variant="secondary" text="share" size="sm" onClick={() => { }} />
+      <Button startIcon={<PlusIcon size="md" />} variant="secondary" text="Add content" size="md" onClick={() => { }} />
+      <Button startIcon={<PlusIcon size="lg" />} variant="primary" text="Add content" size="lg" onClick={() => { }} />
+    </div>
+    )
 }
 
 export default App
