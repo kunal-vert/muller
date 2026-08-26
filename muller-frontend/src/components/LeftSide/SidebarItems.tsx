@@ -7,12 +7,12 @@ export const SidebarItems = () => {
 
                 <div
                     key={item.name}
-                    className="flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-all duration-200 text-gray-400 hover:bg-gray-800 hover:text-white"
+                    className="  flex items-center gap-10 p-3 rounded-xl cursor-pointer transition-all duration-200 text-gray-400 hover:bg-gray-800 hover:text-white"
                 >
                     <div className="w-6 h-6 flex items-center justify-center">
                         {item.icon}
                     </div>
-                    <div className="text-base font-semibold">
+                    <div className="text-xl font-semibold">
                         {item.name}
                     </div>
                 </div>
