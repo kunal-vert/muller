@@ -12,7 +12,7 @@ export interface ButtonProps {
 const sizeStyles = {
   "sm": "px-3 py-1.5 text-sm font-medium",
   "md": "px-4 py-2 text-base font-semibold",
-  "lg": "px-6 py-3 text-lg font-bold"
+  "lg": "px-5 py-3 text-lg font-bold"
 }
 
 const flexStyles = "flex items-center justify-center gap-2 "
