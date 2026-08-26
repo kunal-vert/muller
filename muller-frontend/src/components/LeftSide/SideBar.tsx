@@ -4,7 +4,7 @@ import { SidebarItems } from "./SidebarItems"
 
 const SideBar = () =>{
     return (
-        <div className=" flex flex-col justify-between gap-9
+        <div className=" flex flex-col gap-8 
          m-4">
             <Logo/>
             <SidebarItems/>
