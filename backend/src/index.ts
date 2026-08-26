@@ -69,7 +69,7 @@ app.post("/api/v1/signin", async (req, res) => {
 
     if (!user) {
       return res.status(403).json({
-        message: "creds don't match"
+        message: "user invalid"
       })
 
     }
