@@ -2,7 +2,11 @@ import Logo from "./Logo"
 
 import { SidebarItems } from "./SidebarItems"
 
-const SideBar = () =>{
+interface SideBarProps {
+  functionButton: (value: boolean) => void;
+}
+
+const SideBar = ({ functionButton }: SideBarProps) =>{
     return (
         <div className=" flex flex-col gap-8 
          m-4  ">
