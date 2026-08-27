@@ -1,14 +1,14 @@
-
 type Variants = "primary" | "secondary"
 
 export interface ButtonProps {
   variant: Variants;
   size: "sm" | "md" | "lg";
   text: string;
-  startIcon?: any; //optinal
-  endIcon?: any;//optional
+  startIcon?: any; 
+  endIcon?: any;
   onClick?: () => void;
 }
+
 const sizeStyles = {
   "sm": "px-3 py-1.5 text-sm font-medium",
   "md": " px-4 py-2 text-base font-semibold",
@@ -25,7 +25,14 @@ const ColorVariant = {
 }
 
 export const Button = ({ variant, size, text, startIcon, endIcon, onClick }: ButtonProps) => {
-  return <button className={`${ColorVariant[variant]} ${defaultStyles} ${sizeStyles[size]} ${flexStyles} ${onClick} `}  >{startIcon ? <div >{startIcon}</div> : null} {text} {endIcon}</button>
+  return (
+    <button 
+      onClick={onClick} 
+      className={`${ColorVariant[variant]} ${defaultStyles} ${sizeStyles[size]} ${flexStyles}`}
+    >
+      {startIcon ? <div>{startIcon}</div> : null} 
+      {text} 
+      {endIcon}
+    </button>
+  )
 }
-
-
