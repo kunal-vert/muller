@@ -3,12 +3,14 @@ import { Button } from "../components/Button"
 import { InputBox } from "../components/RightSide/ModelBox"
 import axios from "axios"
 import { BACKEND_URL } from "../config"
+import { useNavigate } from "react-router-dom"
 
 
 
 const Signin = () => {
   const IdentifierRef = useRef<any>(null)
   const PasswordeRef = useRef<any>(null)
+  const Navigate = useNavigate()
 
   async function SigninHandler() {
     const identifier = IdentifierRef.current.value;
@@ -22,6 +24,7 @@ const Signin = () => {
       const jwt = response.data.token;
       localStorage.setItem("token", jwt)
       alert(response.data.message)
+      Navigate("/dashboard")
     } catch (error: any) {
       alert(error.response?.data?.message || "Signin failed")
     }

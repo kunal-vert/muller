@@ -3,6 +3,7 @@ import { Button } from "../components/Button"
 import { InputBox } from "../components/RightSide/ModelBox"
 import axios from "axios"
 import { BACKEND_URL } from "../config"
+import { useNavigate } from "react-router-dom"
 
 
 
@@ -11,6 +12,7 @@ const Signup = () => {
   const UsernameRef = useRef<any>(null)
   const EmailRef = useRef<any>(null)
   const PasswordeRef = useRef<any>(null)
+  const Navigate = useNavigate()
 
   async function SignupHandler() {
     const username = UsernameRef.current?.value
@@ -24,6 +26,7 @@ const Signup = () => {
         password
       })
       alert("You have signed up!")
+      Navigate("/Signin")
     } catch (e: any) {
       alert(e.response?.data?.message || "Signup failed")
     }
