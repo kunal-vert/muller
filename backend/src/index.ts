@@ -14,6 +14,7 @@ import jwt from "jsonwebtoken";
 import { UserMiddleware } from "./middleware.js";
 import { MONGO_URL, JWT_PASSWORD } from "./config.js";
 import { random } from "./utils.js";
+import cors from "cors"
 
 
 
@@ -25,6 +26,8 @@ mongoose.connect(MONGO_URL)
 const app = express();
 
 app.use(express.json());
+app.use(cors())
+
 
 app.post("/api/v1/signup", ValidateReq, async (req, res) => {
   const { username, email, password } = req.body;
@@ -144,14 +147,14 @@ app.delete("/api/v1/content", UserMiddleware, async (req, res) => {
 
 app.post("/api/v1/brain/share", UserMiddleware, async (req, res) => {
   const share = req.body.share;
-  
+
 
   try {
     if (share) {
 
-      const existingLink = await LinkModel.findOne({ 
+      const existingLink = await LinkModel.findOne({
         userId: (req as any).userId
-       })
+      })
 
       if (existingLink) {
         return res.json({
@@ -192,7 +195,7 @@ app.post("/api/v1/brain/share", UserMiddleware, async (req, res) => {
 });
 
 
-app.get("/api/v1/brain/:shareLink" , async (req, res) => {
+app.get("/api/v1/brain/:shareLink", async (req, res) => {
   const hash = req.params.shareLink as string;
 
   const link = await LinkModel.findOne({
