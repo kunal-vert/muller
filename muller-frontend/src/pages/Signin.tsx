@@ -1,25 +1,48 @@
+import { useRef } from "react"
 import { Button } from "../components/Button"
 import { InputBox } from "../components/RightSide/ModelBox"
+import axios from "axios"
+import { BACKEND_URL } from "../config"
 
 
 
 const Signin = () => {
+  const IdentifierRef = useRef<any>(null)
+  const PasswordeRef = useRef<any>(null)
+
+  async function SigninHandler() {
+    const identifier = IdentifierRef.current.value;
+    const password = PasswordeRef.current.value;
+
+    try {
+      const response = await axios.post(`${BACKEND_URL}/api/v1/signin`, {
+        identifier,
+        password
+      })
+      const jwt = response.data.token;
+      localStorage.setItem("token", jwt)
+      alert(response.data.message)
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Signin failed")
+    }
+  }
+
   return (
     <div className='h-screen w-screen bg-gray-300 flex justify-center items-center '>
-        <div className="bg-gray-800 max-w-60 rounded border p-6 flex gap-3 flex-col ">
-            <div className="text-2xl font-bold text-center">
-                SignIn
-            </div>
-            <InputBox placeholder="Username/Email"/>
-            
-            <InputBox placeholder="password"/>
+      <div className="bg-gray-800 w-full max-w-sm rounded border p-7 flex gap-3 flex-col ">
+        <div className="text-2xl font-bold text-center">
+          SignIn
+        </div>
+        <InputBox reference={IdentifierRef} placeholder="Username/Email" />
 
-            <div className="flex justify-center w-full pt-2.5">
-            <Button variant="secondary" text="Submit" size="lg"/>
+        <InputBox reference={PasswordeRef} placeholder="password" />
+
+        <div className="flex justify-center w-full pt-2.5">
+          <Button onClick={SigninHandler} loading={false} variant="secondary" text="Signin" size="lg" />
         </div>
-            
-        </div>
-        
+
+      </div>
+
     </div>
   )
 }
